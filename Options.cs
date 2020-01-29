@@ -21,7 +21,7 @@ namespace Nmm2Bcr
         [Option('q', "quiet", HelpText = "Quiet mode. No screen output (except for errors).")]
         public bool BeQuiet { get; set; }
 
-        [Option("iso", HelpText = "Output file ISO 25178-71:2012 complient.")]
+        [Option("iso", HelpText = "Output file ISO 25178-71:2012 compliant.")]
         public bool IsoFormat { get; set; }
 
         [Option("heydemann", HelpText = "Perform Heydemann correction.")]
