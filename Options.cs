@@ -9,10 +9,10 @@ namespace Nmm2Bcr
         [Option('c', "channel", DefaultValue = "-LZ+AZ", HelpText = "Channel to export.")]
         public string ChannelSymbol { get; set; }
 
-        [Option('s', "scan", DefaultValue = 0, HelpText = "Scan index for multiscan files.")]
+        [Option('s', "scan", DefaultValue = 0, HelpText = "Scan index for multi-scan files.")]
         public int ScanIndex { get; set; }
 
-        [Option('r', "reference", DefaultValue = 1, HelpText = "Mode # of height referencing.")]
+        [Option('r', "reference", DefaultValue = 1, HelpText = "Height reference technique.")]
         public int ReferenceMode { get; set; }
 
         [Option('b', "bias", DefaultValue = 0.0, HelpText = "bias value [um] to be subtracted.")]
@@ -25,7 +25,7 @@ namespace Nmm2Bcr
         public bool IsoFormat { get; set; }
 
         [Option("heydemann", HelpText = "Perform Heydemann correction.")]
-        public bool Heydemann { get; set; }
+        public bool DoHeydemann { get; set; }
 
         [Option("back", HelpText = "Use backtrace profile (when present).")]
         public bool UseBack { get; set; }
@@ -36,10 +36,10 @@ namespace Nmm2Bcr
         [Option("diff", HelpText = "Difference (forward-backtrace) profile (when present).")]
         public bool UseDiff { get; set; }
 
-        [Option("relaxed", HelpText = "Allow large (>65535) field dimension")]
+        [Option("relaxed", HelpText = "Allow large (>65535) field dimension.")]
         public bool Relaxed { get; set; }
 
-        [Option("profile", DefaultValue = 0, HelpText = "Extract single profile.")]
+        [Option('p', "profile", DefaultValue = 0, HelpText = "Extract single profile.")]
         public int ProfileIndex { get; set; }
 
 
@@ -66,7 +66,7 @@ namespace Nmm2Bcr
             help.AddPreOptionsLine("");
             help.AddPreOptionsLine("Usage: " + AppName + " filename1 [filename2] [options]");
             help.AddPostOptionsLine("");
-            help.AddPostOptionsLine("Supported values for -r: 1=min 2=max 3=avarage 4=mid 5=bias 6=first 7=last 8=center 9=linear 10=LSQ");
+            help.AddPostOptionsLine("Supported values for -r: 1=min 2=max 3=average 4=mid 5=bias 6=first 7=last 8=center 9=linear 10=LSQ 11=linear(positive) 12=LSQ(positive)");
 
             help.AddOptions(this);
 

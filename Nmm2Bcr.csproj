@@ -45,7 +45,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="Bev.UI">
-      <HintPath>..\Bev.UI\Bev.UI\bin\Release\Bev.UI.dll</HintPath>
+      <HintPath>..\Bev.UI.ConsoleUI\Bev.UI\bin\Release\Bev.UI.dll</HintPath>
     </Reference>
     <Reference Include="Bev.IO.NmmReader">
       <HintPath>..\Bev.IO.NmmReader\Bev.IO.NmmReader\bin\Release\Bev.IO.NmmReader.dll</HintPath>

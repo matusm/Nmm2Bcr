@@ -1,0 +1,14 @@
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Nmm2Bcr.exe.config
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Nmm2Bcr.exe
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Nmm2Bcr.pdb
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Bev.IO.BcrWriter.dll
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Bev.IO.NmmReader.dll
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Bev.UI.dll
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\CommandLine.dll
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Bev.IO.BcrWriter.pdb
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\Bev.UI.pdb
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\bin\Release\CommandLine.xml
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\obj\Release\Nmm2Bcr.csprojAssemblyReference.cache
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\obj\Release\Nmm2Bcr.csproj.CopyComplete
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\obj\Release\Nmm2Bcr.exe
+C:\Users\Administrator\Source\Repos\Nmm2Bcr\obj\Release\Nmm2Bcr.pdb
