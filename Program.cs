@@ -1,7 +1,7 @@
 ﻿using Bev.IO.BcrWriter;
 using Bev.IO.NmmReader;
 using Bev.IO.NmmReader.scan_mode;
-using Bev.UI;
+//using Bev.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
