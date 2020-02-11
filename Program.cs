@@ -128,14 +128,16 @@ namespace Nmm2Bcr
             bcrMetaData.Add("TemperatureGradient", $"{theData.MetaData.AirTemperatureGradient:F3} oC");
             bcrMetaData.Add("TemperatureRange", $"{theData.MetaData.AirTemperatureDrift:F3} oC");
             bcrMetaData.Add("ScanSpeed", $"{theData.MetaData.ScanSpeed} um/s");
-            bcrMetaData.Add("ScanAngle", $"{theData.MetaData.ScanFieldRotation:F3} grad");
-            //bcrMetaData.Add("ScanXcenter", $" mm");
-            //bcrMetaData.Add("ScanYcenter", $" mm");
+            bcrMetaData.Add("AngularOrientation", $"{theData.MetaData.ScanFieldRotation:F3} grad");
+            bcrMetaData.Add("ScanFieldCenterX", $"{theData.MetaData.ScanFieldCenterX*1000:F1} mm");
+            bcrMetaData.Add("ScanFieldCenterY", $"{theData.MetaData.ScanFieldCenterY * 1000:F1} mm");
+            bcrMetaData.Add("ScanFieldCenterZ", $"{theData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
+            bcrMetaData.Add("GlitchedDataPoints", $"{theData.MetaData.NumberOfGlitchedDataPoints}");
+            bcrMetaData.Add("SpuriousDataLines", $"{theData.MetaData.SpuriousDataLines}");
             for (int i = 0; i < theData.MetaData.ScanComments.Count; i++)
             {
                 bcrMetaData.Add($"ScanComment{i + 1}", theData.MetaData.ScanComments[i]);
             }
-
 
             bcr.PrepareTrailerSection(bcrMetaData);
 
