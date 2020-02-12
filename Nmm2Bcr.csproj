@@ -44,9 +44,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Bev.UI">
-      <HintPath>..\Bev.UI.ConsoleUI\Bev.UI\bin\Release\Bev.UI.dll</HintPath>
-    </Reference>
     <Reference Include="Bev.IO.NmmReader">
       <HintPath>..\Bev.IO.NmmReader\Bev.IO.NmmReader\bin\Release\Bev.IO.NmmReader.dll</HintPath>
     </Reference>
@@ -64,8 +61,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MyLibs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
