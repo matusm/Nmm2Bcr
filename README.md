@@ -12,18 +12,18 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 ### Options:  
 
-`--channel (-c)` : The channel to be used as topography data. The default is "-LZ+AZ" (the height)
-`--scan (-s)` : Scan index for multi-scan files.
-`--profile (-p)` : Extract a single profile. If `--profile=0` extract whole scan field. 
-`--both` : Use the average of forward and backtrace scan data (when present).
-`--back` : Use the backtrace scan data only (when present).
-`--diff` : Use the difference of forward and backtrace scan data (when present).
-`--iso` : Force output file to be ISO 25178-71:2012 compliant.
-`--quiet (-q)` : Quiet mode. No screen output (except for errors).
-`--relaxed` : Allow large (>65535) field dimension. This is a violation of the format definition standards so the produced files might be unreadable by most evaluation software.
-`--comment` : User supplied string to be included in the metadata.
-`--bias (-b)` : Bias value in µm to be subtracted from the hight values (for `-r5` only).
-`--reference (-r)` : Kind of height reference technique, supported values are:
+*`--channel (-c)` : The channel to be used as topography data. The default is "-LZ+AZ" (the height)
+*`--scan (-s)` : Scan index for multi-scan files.
+*`--profile (-p)` : Extract a single profile. If `--profile=0` extract whole scan field. 
+*`--both` : Use the average of forward and backtrace scan data (when present).
+*`--back` : Use the backtrace scan data only (when present).
+*`--diff` : Use the difference of forward and backtrace scan data (when present).
+*`--iso` : Force output file to be ISO 25178-71:2012 compliant.
+*`--quiet (-q)` : Quiet mode. No screen output (except for errors).
+*`--relaxed` : Allow large (>65535) field dimension. This is a violation of the format definition standards so the produced files might be unreadable by most evaluation software.
+*`--comment` : User supplied string to be included in the metadata.
+*`--bias (-b)` : Bias value in µm to be subtracted from the hight values (for `-r5` only).
+*`--reference (-r)` : Kind of height reference technique, supported values are:
    1 reference to minimum hight value
    2 reference to maximum hight value
    3 reference to average hight value
