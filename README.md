@@ -35,25 +35,27 @@ Nmm2Bcr inputfile [outputfile] [options]
 `--bias (-b)` : Bias value in µm to be subtracted from the hight values (for `-r5` only).
 
 `--reference (-r)` : Kind of height reference technique, supported values are:
-   1 reference to minimum hight value
-   2 reference to maximum hight value
-   3 reference to average hight value
-   4 reference to central hight value (average of minimum and maximum)
-   5 reference to user supplied bias value
-   6 reference to first value of scan field
-   7 reference to last value of scan field
-   8 reference to the hight value of the center of scan field (or profile)
-   9 reference to connecting plane (or line)
-   10 reference to LSQ plane (or line)
-   11 same as 9 but positive definite
-   12 same as 10 but positive definite
+   1 reference to minimum hight value;
+   2 reference to maximum hight value;
+   3 reference to average hight value;
+   4 reference to central hight value (average of minimum and maximum);
+   5 reference to user supplied bias value;
+   6 reference to first value of scan field;
+   7 reference to last value of scan field;
+   8 reference to the hight value of the center of scan field (or profile);
+   9 reference to connecting plane (or line);
+   10 reference to LSQ plane (or line);
+   11 same as 9 but positive definite;
+   12 same as 10 but positive definite;
 
 ### Caveats and technical details:  
 tbc
 
 ### Dependencies  
 Bev.IO.NmmReader:  https://github.com/matusm/Bev.IO.NmmReader  
+
 Bev.IO.BcrWriter: https://github.com/matusm/Bev.IO.BcrWriter 
+
 CommandLineParser: https://github.com/commandlineparser/commandline 
 
 The MIT License (MIT)
