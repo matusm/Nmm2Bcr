@@ -99,6 +99,7 @@ namespace Nmm2Bcr
             Dictionary<string, string> bcrMetaData = new Dictionary<string, string>();
             bcrMetaData.Add("InputFile", theData.MetaData.BaseFileName);
             bcrMetaData.Add("ConvertedBy", $"{ConsoleUI.Title} version {ConsoleUI.Version}");
+            bcrMetaData.Add("UserComment", options.UserComment);
             bcrMetaData.Add("OperatorName", theData.MetaData.User);
             bcrMetaData.Add("Organisation", theData.MetaData.Organisation);
             bcrMetaData.Add("SampleIdentifier", theData.MetaData.SampleIdentifier);

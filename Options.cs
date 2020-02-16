@@ -21,6 +21,9 @@ namespace Nmm2Bcr
         [Option('q', "quiet", HelpText = "Quiet mode. No screen output (except for errors).")]
         public bool BeQuiet { get; set; }
 
+        [Option("comment", DefaultValue = "*none*", HelpText = "User supplied comment string.")]
+        public string UserComment { get; set; }
+
         [Option("iso", HelpText = "Output file ISO 25178-71:2012 compliant.")]
         public bool IsoFormat { get; set; }
 
