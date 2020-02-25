@@ -35,6 +35,20 @@ namespace Nmm2Bcr
             ConsoleUI.Done();
             ConsoleUI.WriteLine();
 
+            if (options.DoHeydemann)
+            {
+                theData.ApplyHeydemannCorrection();
+                if (theData.HeydemannCorrectionApplied)
+                {
+                    ConsoleUI.WriteLine($"Heydemann correction applied, span {theData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                }
+                else
+                {
+                    ConsoleUI.WriteLine($"Heydemann correction not successful.");
+                }
+                ConsoleUI.WriteLine();
+            }
+
             // some checks of the provided CLA options
             if (options.ProfileIndex < 0)
                 options.ProfileIndex = 0;
@@ -79,20 +93,7 @@ namespace Nmm2Bcr
                 ConsoleUI.ErrorExit($"!Channel {options.ChannelSymbol} not in scan data", 5);
             double[] rawData = theData.ExtractProfile(options.ChannelSymbol, options.ProfileIndex, topographyProcessType);
 
-            if (options.DoHeydemann)
-            {
-                theData.ApplyHeydemannCorrection();
-                if(theData.HeydemannCorrectionApplied)
-                {
-                    ConsoleUI.WriteLine($"Heydemann correction applied, span {theData.HeydemannCorrectionSpan*1e9:F1} nm");
-                }
-                else
-                {
-                    ConsoleUI.WriteLine($"Heydemann correction not successful.");
-                }
-                ConsoleUI.WriteLine();
-            }
-
+ 
             // level data 
             DataLeveling levelObject;
             if (options.ProfileIndex == 0)
