@@ -80,7 +80,18 @@ namespace Nmm2Bcr
             double[] rawData = theData.ExtractProfile(options.ChannelSymbol, options.ProfileIndex, topographyProcessType);
 
             if (options.DoHeydemann)
-                ConsoleUI.WriteLine("Heydemann correction currently not implemented.");
+            {
+                theData.ApplyHeydemannCorrection();
+                if(theData.HeydemannCorrectionApplied)
+                {
+                    ConsoleUI.WriteLine($"Heydemann correction applied, span {theData.HeydemannCorrectionSpan*1e9:F1} nm");
+                }
+                else
+                {
+                    ConsoleUI.WriteLine($"Heydemann correction not successful.");
+                }
+                ConsoleUI.WriteLine();
+            }
 
             // level data 
             DataLeveling levelObject;
@@ -120,6 +131,10 @@ namespace Nmm2Bcr
                 bcrMetaData.Add("Scan", $"{theData.MetaData.ScanIndex}");
             }
             bcrMetaData.Add("ReferenceDatum", levelObject.LevelModeDescription);
+            if (theData.HeydemannCorrectionApplied)
+            {
+                bcrMetaData.Add("HeydemannCorrection", $"Span {theData.HeydemannCorrectionSpan * 1e9:F1} nm");
+            }
             bcrMetaData.Add("EnvironmentMode", theData.MetaData.EnvironmentMode);
             bcrMetaData.Add("SampleTemperature", $"{theData.MetaData.SampleTemperature:F3} oC");
             bcrMetaData.Add("AirTemperature", $"{theData.MetaData.AirTemperature:F3} oC");
