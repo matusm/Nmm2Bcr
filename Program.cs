@@ -148,6 +148,7 @@ namespace Nmm2Bcr
             bcrMetaData.Add("ScanFieldCenterX", $"{theData.MetaData.ScanFieldCenterX*1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterY", $"{theData.MetaData.ScanFieldCenterY * 1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterZ", $"{theData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
+            bcrMetaData.Add("ScanDuration", $"{theData.MetaData.ScanDuration.Seconds} s");
             bcrMetaData.Add("GlitchedDataPoints", $"{theData.MetaData.NumberOfGlitchedDataPoints}");
             bcrMetaData.Add("SpuriousDataLines", $"{theData.MetaData.SpuriousDataLines}");
             for (int i = 0; i < theData.MetaData.ScanComments.Count; i++)
