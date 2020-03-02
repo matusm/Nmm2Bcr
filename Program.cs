@@ -35,6 +35,7 @@ namespace Nmm2Bcr
             ConsoleUI.Done();
             ConsoleUI.WriteLine();
 
+            //if (options.ChannelSymbol)
             if (options.DoHeydemann)
             {
                 theData.ApplyHeydemannCorrection();
@@ -92,7 +93,6 @@ namespace Nmm2Bcr
             if (!theData.ColumnPresent(options.ChannelSymbol))
                 ConsoleUI.ErrorExit($"!Channel {options.ChannelSymbol} not in scan data", 5);
             double[] rawData = theData.ExtractProfile(options.ChannelSymbol, options.ProfileIndex, topographyProcessType);
-
  
             // level data 
             DataLeveling levelObject;
