@@ -22,7 +22,6 @@ namespace Nmm2Bcr
                 ConsoleUI.BeVerbatim();
             // print a welcome message
             ConsoleUI.Welcome();
-            ConsoleUI.WriteLine();
             // get the filename(s)
             string[] fileNames = options.ListOfFileNames.ToArray();
             if (fileNames.Length == 0)
@@ -33,7 +32,6 @@ namespace Nmm2Bcr
             nmmFileNameObject.SetScanIndex(options.ScanIndex);
             NmmScanData theData = new NmmScanData(nmmFileNameObject);
             ConsoleUI.Done();
-            ConsoleUI.WriteLine();
 
             //if (options.ChannelSymbol)
             if (options.DoHeydemann)
@@ -47,7 +45,6 @@ namespace Nmm2Bcr
                 {
                     ConsoleUI.WriteLine($"Heydemann correction not successful.");
                 }
-                ConsoleUI.WriteLine();
             }
 
             // some checks of the provided CLA options
@@ -172,7 +169,6 @@ namespace Nmm2Bcr
                 ConsoleUI.ErrorExit("!could not write file", 4);
             }
             ConsoleUI.Done();
-            ConsoleUI.WriteLine();
         }
 
         // this method is used to map the numerical option to the apropiate enumeration
