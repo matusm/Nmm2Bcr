@@ -90,7 +90,7 @@ namespace Nmm2Bcr
             if (!theData.ColumnPresent(options.ChannelSymbol))
                 ConsoleUI.ErrorExit($"!Channel {options.ChannelSymbol} not in scan data", 5);
             double[] rawData = theData.ExtractProfile(options.ChannelSymbol, options.ProfileIndex, topographyProcessType);
- 
+
             // level data 
             DataLeveling levelObject;
             if (options.ProfileIndex == 0)
@@ -142,10 +142,10 @@ namespace Nmm2Bcr
             bcrMetaData.Add("TemperatureRange", $"{theData.MetaData.AirTemperatureDrift:F3} oC");
             bcrMetaData.Add("ScanSpeed", $"{theData.MetaData.ScanSpeed} um/s");
             bcrMetaData.Add("AngularOrientation", $"{theData.MetaData.ScanFieldRotation:F3} grad");
-            bcrMetaData.Add("ScanFieldCenterX", $"{theData.MetaData.ScanFieldCenterX*1000:F1} mm");
+            bcrMetaData.Add("ScanFieldCenterX", $"{theData.MetaData.ScanFieldCenterX * 1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterY", $"{theData.MetaData.ScanFieldCenterY * 1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterZ", $"{theData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
-            bcrMetaData.Add("ScanDuration", $"{theData.MetaData.ScanDuration.Seconds} s");
+            bcrMetaData.Add("ScanDuration", $"{theData.MetaData.ScanDuration.TotalSeconds:F0} s");
             bcrMetaData.Add("GlitchedDataPoints", $"{theData.MetaData.NumberOfGlitchedDataPoints}");
             bcrMetaData.Add("SpuriousDataLines", $"{theData.MetaData.SpuriousDataLines}");
             for (int i = 0; i < theData.MetaData.ScanComments.Count; i++)
