@@ -4,13 +4,13 @@ Nmm2Bcr - NMM Data to BCR Converter
 A standalone command line tool that converts files produced by the [SIOS](https://sios-de.com) NMM-1.
 The produced GPS data files are formatted according to ISO 25178-7, ISO 25178-71 and EUNA 15178 (BCR). All files are ASCII (text) files, the (currently deprecated) option to produce binary files is not implemented. 
 
-### Command Line Usage:  
+## Command Line Usage:  
 
 ```
 Nmm2Bcr inputfile [outputfile] [options]
 ```
 
-### Options:  
+## Options:  
 
 `--channel (-c)` : The channel to be used as topography data. The default is "-LZ+AZ" (the height)
 
@@ -24,7 +24,7 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--diff` : Use the difference of forward and backtrace scan data (when present).
 
-`--iso` : Force output file to be ISO 25178-71:2012 compliant.
+`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recomended).
 
 `--quiet (-q)` : Quiet mode. No screen output (except for errors).
 
@@ -32,26 +32,40 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--comment` : User supplied string to be included in the metadata.
 
+### Options for height data transformation
+
+`--heydemann` : perform Heydemann correction, but only for the "-LZ+AZ" channel.
+
 `--bias (-b)` : Bias value in µm to be subtracted from the hight values (for `-r5` only).
 
-`--reference (-r)` : Kind of height reference technique, supported values are:
-   1 reference to minimum hight value;
-   2 reference to maximum hight value;
-   3 reference to average hight value;
-   4 reference to central hight value (average of minimum and maximum);
-   5 reference to user supplied bias value;
-   6 reference to first value of scan field;
-   7 reference to last value of scan field;
-   8 reference to the hight value of the center of scan field (or profile);
-   9 reference to connecting plane (or line);
-   10 reference to LSQ plane (or line);
-   11 same as 9 but positive definite;
-   12 same as 10 but positive definite;
+`--reference (-r)` : The height reference technique, supported values are:
 
-### Caveats and technical details:  
-tbc
+1: reference to minimum hight value (all values positive)
 
-### Dependencies  
+2: reference to maximum hight value (all values negative)
+
+3: reference to average hight value
+
+4: reference to central hight value (average of minimum and maximum)
+
+5: reference to user supplied bias value
+
+6: reference to first value of scan field
+
+7: reference to last value of scan field
+
+8: reference to the hight value of the center of scan field (or profile)
+
+9: reference to connecting plane (or line)
+
+10: reference to LSQ plane (or line)
+
+11: first apply 9, then 1
+
+12: first apply 10, then 1
+
+
+## Dependencies  
 Bev.IO.NmmReader:  https://github.com/matusm/Bev.IO.NmmReader  
 
 Bev.IO.BcrWriter: https://github.com/matusm/Bev.IO.BcrWriter 

@@ -28,9 +28,9 @@ namespace Nmm2Bcr
                 ConsoleUI.ErrorExit("!Missing input file", 1);
             // read all relevant scan data
             ConsoleUI.StartOperation("Reading and evaluating files");
-            NmmFileName nmmFileNameObject = new NmmFileName(fileNames[0]);
-            nmmFileNameObject.SetScanIndex(options.ScanIndex);
-            NmmScanData theData = new NmmScanData(nmmFileNameObject);
+            NmmFileName nmmFileName = new NmmFileName(fileNames[0]);
+            nmmFileName.SetScanIndex(options.ScanIndex);
+            NmmScanData theData = new NmmScanData(nmmFileName);
             ConsoleUI.Done();
 
             //if (options.ChannelSymbol)
@@ -160,7 +160,7 @@ namespace Nmm2Bcr
             if (fileNames.Length >= 2)
                 outFileName = fileNames[1];
             else
-                outFileName = nmmFileNameObject.GetFreeFileNameWithIndex("sdf");
+                outFileName = nmmFileName.GetFreeFileNameWithIndex("sdf");
 
             ConsoleUI.WritingFile(outFileName);
             if (!bcr.WriteToFile(outFileName))
