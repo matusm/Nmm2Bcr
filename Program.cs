@@ -74,17 +74,28 @@ namespace Nmm2Bcr
             // now we can start to sort and format everything we need
             BcrWriter bcr = new BcrWriter();
             bcr.Relaxed = options.Relaxed;
+            bcr.Relaxed = !options.Strict; // overrules Relaxed
+            ConsoleUI.WriteLine(bcr.Relaxed ? "Relaxed formatting" : "Strict formatting");
             bcr.ForceIsoFormat = options.IsoFormat;
+            ConsoleUI.WriteLine(bcr.ForceIsoFormat? "ISO 25178-71 format" : "Legacy format");
             // ISO 25178-71 file header
             bcr.CreationDate = theData.MetaData.CreationDate;
             bcr.ManufacurerId = theData.MetaData.InstrumentIdentifier;
             bcr.NumberOfPointsPerProfile = theData.MetaData.NumberOfDataPoints;
             if (options.ProfileIndex == 0)
+            {
                 bcr.NumberOfProfiles = theData.MetaData.NumberOfProfiles;
+                bcr.YScale = theData.MetaData.ScanFieldDeltaY;
+                ConsoleUI.WriteLine("Extract complete scanfield");
+            }
             else
+            {
                 bcr.NumberOfProfiles = 1;
+                bcr.YScale = 0;
+                ConsoleUI.WriteLine($"Extract single profile {options.ProfileIndex} only");
+            }
             bcr.XScale = theData.MetaData.ScanFieldDeltaX;
-            bcr.YScale = theData.MetaData.ScanFieldDeltaY;
+            bcr.ZScale = 1.0e-6;
 
             // read actual topography data for given channel
             if (!theData.ColumnPresent(options.ChannelSymbol))
