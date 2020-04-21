@@ -39,8 +39,11 @@ namespace Nmm2Bcr
         [Option("diff", HelpText = "Difference (forward-backtrace) profile (when present).")]
         public bool UseDiff { get; set; }
 
-        [Option("relaxed", HelpText = "Allow large (>65535) field dimension.")]
+        [Option("relaxed", DefaultValue = true, HelpText = "Allow departure from standardized format.")]
         public bool Relaxed { get; set; }
+
+        [Option("strict", HelpText = "Force standardized format.")]
+        public bool Strict { get; set; }
 
         [Option('p', "profile", DefaultValue = 0, HelpText = "Extract single profile.")]
         public int ProfileIndex { get; set; }
