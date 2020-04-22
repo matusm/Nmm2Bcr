@@ -18,7 +18,7 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--scan (-s)` : Scan index for multi-scan files.
 
-`--profile (-p)` : Extract a single profile. If `--profile=0` extract whole scan field. 
+`--profile (-p)` : Extract a single profile. If `--profile=0` extract the whole scan field. 
 
 `--both` : Use the average of forward and backtrace scan data (when present).
 
@@ -26,13 +26,13 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--diff` : Use the difference of forward and backtrace scan data (when present).
 
-`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recommended, Gwyddion will currently ignore metadata).
-
 `--quiet (-q)` : Quiet mode. No screen output (except for errors).
 
-`--strict` : Dissable large (>65535) field dimension. Keep to format definition standards.
-
 `--comment` : User supplied string to be included in the metadata.
+
+`--strict` : Disable large (>65535) field dimension and other goodies.
+
+`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recommended, Gwyddion will currently ignore metadata).
 
 ### Options for height data transformation
 
@@ -70,7 +70,7 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 ## Effect of the `--strict` command line option
 
-* Field dimensions are restrivted to 65535 at most;
+* Field dimensions are restricted to 65535 at most;
 
 * The ManufacID is trimmed to 10 characters;
 
