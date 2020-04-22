@@ -15,13 +15,16 @@ namespace Nmm2Bcr
         [Option('r', "reference", DefaultValue = 1, HelpText = "Height reference technique.")]
         public int ReferenceMode { get; set; }
 
+        [Option('z', "zscale", DefaultValue = 1e-6, HelpText = "Scale factor for height axis.")]
+        public double ZScale { get; set; }
+
         [Option('b', "bias", DefaultValue = 0.0, HelpText = "bias value [um] to be subtracted.")]
         public double Bias { get; set; }
 
         [Option('q', "quiet", HelpText = "Quiet mode. No screen output (except for errors).")]
         public bool BeQuiet { get; set; }
 
-        [Option("comment", DefaultValue = "none", HelpText = "User supplied comment string.")]
+        [Option("comment", DefaultValue = "---", HelpText = "User supplied comment string.")]
         public string UserComment { get; set; }
 
         [Option("iso", HelpText = "Output file ISO 25178-71:2012 compliant.")]
@@ -38,9 +41,6 @@ namespace Nmm2Bcr
 
         [Option("diff", HelpText = "Difference (forward-backtrace) profile (when present).")]
         public bool UseDiff { get; set; }
-
-        [Option("relaxed", DefaultValue = true, HelpText = "Allow departure from standardized format.")]
-        public bool Relaxed { get; set; }
 
         [Option("strict", HelpText = "Force standardized format.")]
         public bool Strict { get; set; }

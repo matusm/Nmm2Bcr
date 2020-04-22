@@ -73,7 +73,6 @@ namespace Nmm2Bcr
 
             // now we can start to sort and format everything we need
             BcrWriter bcr = new BcrWriter();
-            bcr.Relaxed = options.Relaxed;
             bcr.Relaxed = !options.Strict; // overrules Relaxed
             ConsoleUI.WriteLine(bcr.Relaxed ? "Relaxed formatting" : "Strict formatting");
             bcr.ForceIsoFormat = options.IsoFormat;
@@ -95,7 +94,7 @@ namespace Nmm2Bcr
                 ConsoleUI.WriteLine($"Extract single profile {options.ProfileIndex} only");
             }
             bcr.XScale = theData.MetaData.ScanFieldDeltaX;
-            bcr.ZScale = 1.0e-6;
+            bcr.ZScale = options.ZScale;
 
             // read actual topography data for given channel
             if (!theData.ColumnPresent(options.ChannelSymbol))
