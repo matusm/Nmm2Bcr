@@ -67,12 +67,12 @@ namespace Nmm2Bcr
             };
             string sPre = "Program to convert scanning files by SIOS NMM-1 to BCR or ISO 25178-71:2012 raster data format. " +
                 "The quadruple of files (dat ind dsc pos) are analyzed to obtain the required parameters. " +
-                "A rudimentary data processing is possible via the -r option.";
+                "A rudimentary data processing is implemented via the -r option.";
             help.AddPreOptionsLine(sPre);
             help.AddPreOptionsLine("");
             help.AddPreOptionsLine("Usage: " + AppName + " filename1 [filename2] [options]");
             help.AddPostOptionsLine("");
-            help.AddPostOptionsLine("Supported values for -r: 1=min 2=max 3=average 4=mid 5=bias 6=first 7=last 8=center 9=linear 10=LSQ 11=linear(positive) 12=LSQ(positive)");
+            help.AddPostOptionsLine("Supported values for -r: 0=nop 1=min 2=max 3=average 4=mid 5=bias 6=first 7=last 8=center 9=linear 10=LSQ 11=linear(positive) 12=LSQ(positive)");
 
             help.AddOptions(this);
 

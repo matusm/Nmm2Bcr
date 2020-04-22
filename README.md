@@ -14,6 +14,8 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--channel (-c)` : The channel to be used as topography data. The default is "-LZ+AZ" (the height)
 
+`--zscale (-z)` : Scale factor for height axis. Default is 1e-6 (µm).
+
 `--scan (-s)` : Scan index for multi-scan files.
 
 `--profile (-p)` : Extract a single profile. If `--profile=0` extract whole scan field. 
@@ -24,11 +26,11 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--diff` : Use the difference of forward and backtrace scan data (when present).
 
-`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recomended).
+`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recommended, Gwyddion will currently ignore metadata).
 
 `--quiet (-q)` : Quiet mode. No screen output (except for errors).
 
-`--relaxed` : Allow large (>65535) field dimension. This is a violation of the format definition standards so the produced files might be unreadable by most evaluation software.
+`--strict` : Dissable large (>65535) field dimension. Keep to format definition standards.
 
 `--comment` : User supplied string to be included in the metadata.
 
@@ -40,9 +42,11 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--reference (-r)` : The height reference technique, supported values are:
 
-1: reference to minimum hight value (all values positive)
+0: do nothing
 
-2: reference to maximum hight value (all values negative)
+1: reference to minimum hight value (all values positive, default)
+
+2: reference to maximum hight value (all values negative or 0)
 
 3: reference to average hight value
 
@@ -64,6 +68,13 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 12: first apply 10, then 1
 
+## Effect of the `--strict` command line option
+
+* Field dimensions are restrivted to 65535 at most;
+
+* The ManufacID is trimmed to 10 characters;
+
+* Invalid data points are coded by `BAD` instead of `NaN`.
 
 ## Dependencies  
 Bev.IO.NmmReader:  https://github.com/matusm/Bev.IO.NmmReader  
@@ -71,6 +82,3 @@ Bev.IO.NmmReader:  https://github.com/matusm/Bev.IO.NmmReader
 Bev.IO.BcrWriter: https://github.com/matusm/Bev.IO.BcrWriter 
 
 CommandLineParser: https://github.com/commandlineparser/commandline 
-
-The MIT License (MIT)
-Copyright (c) 2019-2020 Michael Matus
