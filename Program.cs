@@ -30,16 +30,16 @@ namespace Nmm2Bcr
             ConsoleUI.StartOperation("Reading and evaluating files");
             NmmFileName nmmFileName = new NmmFileName(fileNames[0]);
             nmmFileName.SetScanIndex(options.ScanIndex);
-            NmmScanData theData = new NmmScanData(nmmFileName);
+            NmmScanData nmmScanData = new NmmScanData(nmmFileName);
             ConsoleUI.Done();
 
             //if (options.ChannelSymbol)
             if (options.DoHeydemann)
             {
-                theData.ApplyHeydemannCorrection();
-                if (theData.HeydemannCorrectionApplied)
+                nmmScanData.ApplyHeydemannCorrection();
+                if (nmmScanData.HeydemannCorrectionApplied)
                 {
-                    ConsoleUI.WriteLine($"Heydemann correction applied, span {theData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                    ConsoleUI.WriteLine($"Heydemann correction applied, span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
                 }
                 else
                 {
@@ -50,8 +50,8 @@ namespace Nmm2Bcr
             // some checks of the provided CLA options
             if (options.ProfileIndex < 0)
                 options.ProfileIndex = 0;
-            if (options.ProfileIndex > theData.MetaData.NumberOfProfiles)
-                options.ProfileIndex = theData.MetaData.NumberOfProfiles;
+            if (options.ProfileIndex > nmmScanData.MetaData.NumberOfProfiles)
+                options.ProfileIndex = nmmScanData.MetaData.NumberOfProfiles;
 
             TopographyProcessType topographyProcessType = TopographyProcessType.ForwardOnly;
             if (options.UseBack)
@@ -60,15 +60,15 @@ namespace Nmm2Bcr
                 topographyProcessType = TopographyProcessType.Average;
             if (options.UseDiff)
                 topographyProcessType = TopographyProcessType.Difference;
-            if (theData.MetaData.ScanStatus == ScanDirectionStatus.ForwardOnly)
+            if (nmmScanData.MetaData.ScanStatus == ScanDirectionStatus.ForwardOnly)
             {
                 if (topographyProcessType != TopographyProcessType.ForwardOnly)
                     ConsoleUI.WriteLine("No backward scan data present, switching to forward only.");
                 topographyProcessType = TopographyProcessType.ForwardOnly;
             }
-            if (theData.MetaData.ScanStatus == ScanDirectionStatus.Unknown)
+            if (nmmScanData.MetaData.ScanStatus == ScanDirectionStatus.Unknown)
                 ConsoleUI.ErrorExit("!Unknown scan type", 2);
-            if (theData.MetaData.ScanStatus == ScanDirectionStatus.NoData)
+            if (nmmScanData.MetaData.ScanStatus == ScanDirectionStatus.NoData)
                 ConsoleUI.ErrorExit("!No scan data present", 3);
 
             // now we can start to sort and format everything we need
@@ -78,13 +78,13 @@ namespace Nmm2Bcr
             bcr.ForceIsoFormat = options.IsoFormat;
             ConsoleUI.WriteLine(bcr.ForceIsoFormat? "ISO 25178-71 format" : "Legacy format");
             // ISO 25178-71 file header
-            bcr.CreationDate = theData.MetaData.CreationDate;
-            bcr.ManufacurerId = theData.MetaData.InstrumentIdentifier;
-            bcr.NumberOfPointsPerProfile = theData.MetaData.NumberOfDataPoints;
+            bcr.CreationDate = nmmScanData.MetaData.CreationDate;
+            bcr.ManufacurerId = nmmScanData.MetaData.InstrumentIdentifier;
+            bcr.NumberOfPointsPerProfile = nmmScanData.MetaData.NumberOfDataPoints;
             if (options.ProfileIndex == 0)
             {
-                bcr.NumberOfProfiles = theData.MetaData.NumberOfProfiles;
-                bcr.YScale = theData.MetaData.ScanFieldDeltaY;
+                bcr.NumberOfProfiles = nmmScanData.MetaData.NumberOfProfiles;
+                bcr.YScale = nmmScanData.MetaData.ScanFieldDeltaY;
                 ConsoleUI.WriteLine("Extract complete scanfield");
             }
             else
@@ -93,20 +93,20 @@ namespace Nmm2Bcr
                 bcr.YScale = 0;
                 ConsoleUI.WriteLine($"Extract single profile {options.ProfileIndex} only");
             }
-            bcr.XScale = theData.MetaData.ScanFieldDeltaX;
+            bcr.XScale = nmmScanData.MetaData.ScanFieldDeltaX;
             bcr.ZScale = options.ZScale;
 
             // read actual topography data for given channel
-            if (!theData.ColumnPresent(options.ChannelSymbol))
+            if (!nmmScanData.ColumnPresent(options.ChannelSymbol))
                 ConsoleUI.ErrorExit($"!Channel {options.ChannelSymbol} not in scan data", 5);
-            double[] rawData = theData.ExtractProfile(options.ChannelSymbol, options.ProfileIndex, topographyProcessType);
+            double[] rawData = nmmScanData.ExtractProfile(options.ChannelSymbol, options.ProfileIndex, topographyProcessType);
 
             // level data 
             DataLeveling levelObject;
             if (options.ProfileIndex == 0)
-                levelObject = new DataLeveling(rawData, theData.MetaData.NumberOfDataPoints, theData.MetaData.NumberOfProfiles);
+                levelObject = new DataLeveling(rawData, nmmScanData.MetaData.NumberOfDataPoints, nmmScanData.MetaData.NumberOfProfiles);
             else
-                levelObject = new DataLeveling(rawData, theData.MetaData.NumberOfDataPoints);
+                levelObject = new DataLeveling(rawData, nmmScanData.MetaData.NumberOfDataPoints);
             levelObject.BiasValue = options.Bias * 1.0e-6; //  bias is given in µm on the command line
             double[] leveledTopographyData = levelObject.LevelData(MapOptionToReference(options.ReferenceMode));
 
@@ -116,51 +116,51 @@ namespace Nmm2Bcr
             // ISO 25178-71 file trailer
             // generate a dictionary with all relevant metadata
             Dictionary<string, string> bcrMetaData = new Dictionary<string, string>();
-            bcrMetaData.Add("InputFile", theData.MetaData.BaseFileName);
+            bcrMetaData.Add("InputFile", nmmScanData.MetaData.BaseFileName);
             bcrMetaData.Add("ConvertedBy", $"{ConsoleUI.Title} version {ConsoleUI.Version}");
             bcrMetaData.Add("UserComment", options.UserComment);
-            bcrMetaData.Add("OperatorName", theData.MetaData.User);
-            bcrMetaData.Add("Organisation", theData.MetaData.Organisation);
-            bcrMetaData.Add("SampleIdentifier", theData.MetaData.SampleIdentifier);
-            bcrMetaData.Add("SampleSpecies", theData.MetaData.SampleSpecies);
-            bcrMetaData.Add("SampleSpecification", theData.MetaData.SampleSpecification);
-            bcrMetaData.Add("SPMtechnique", theData.MetaData.SpmTechnique);
-            bcrMetaData.Add("Probe", theData.MetaData.ProbeDesignation);
+            bcrMetaData.Add("OperatorName", nmmScanData.MetaData.User);
+            bcrMetaData.Add("Organisation", nmmScanData.MetaData.Organisation);
+            bcrMetaData.Add("SampleIdentifier", nmmScanData.MetaData.SampleIdentifier);
+            bcrMetaData.Add("SampleSpecies", nmmScanData.MetaData.SampleSpecies);
+            bcrMetaData.Add("SampleSpecification", nmmScanData.MetaData.SampleSpecification);
+            bcrMetaData.Add("SPMtechnique", nmmScanData.MetaData.SpmTechnique);
+            bcrMetaData.Add("Probe", nmmScanData.MetaData.ProbeDesignation);
             bcrMetaData.Add("ZAxisSource", options.ChannelSymbol);
             bcrMetaData.Add("Trace", topographyProcessType.ToString());
             if (options.ProfileIndex != 0)
             {
-                bcrMetaData.Add("NumProfiles", $"{theData.MetaData.NumberOfProfiles}");
+                bcrMetaData.Add("NumProfiles", $"{nmmScanData.MetaData.NumberOfProfiles}");
                 bcrMetaData.Add("ExtractedProfile", $"{options.ProfileIndex}");
             }
-            if (theData.MetaData.NumberOfScans > 1)
+            if (nmmScanData.MetaData.NumberOfScans > 1)
             {
-                bcrMetaData.Add("NumberOfScans", $"{theData.MetaData.NumberOfScans}");
-                bcrMetaData.Add("Scan", $"{theData.MetaData.ScanIndex}");
+                bcrMetaData.Add("NumberOfScans", $"{nmmScanData.MetaData.NumberOfScans}");
+                bcrMetaData.Add("Scan", $"{nmmScanData.MetaData.ScanIndex}");
             }
             bcrMetaData.Add("ReferenceDatum", levelObject.LevelModeDescription);
-            if (theData.HeydemannCorrectionApplied)
+            if (nmmScanData.HeydemannCorrectionApplied)
             {
-                bcrMetaData.Add("HeydemannCorrection", $"Span {theData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                bcrMetaData.Add("HeydemannCorrection", $"Span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
             }
-            bcrMetaData.Add("EnvironmentMode", theData.MetaData.EnvironmentMode);
-            bcrMetaData.Add("SampleTemperature", $"{theData.MetaData.SampleTemperature:F3} oC");
-            bcrMetaData.Add("AirTemperature", $"{theData.MetaData.AirTemperature:F3} oC");
-            bcrMetaData.Add("AirPressure", $"{theData.MetaData.BarometricPressure:F0} Pa");
-            bcrMetaData.Add("AirHumidity", $"{theData.MetaData.RelativeHumidity:F1} %");
-            bcrMetaData.Add("TemperatureGradient", $"{theData.MetaData.AirTemperatureGradient:F3} oC");
-            bcrMetaData.Add("TemperatureRange", $"{theData.MetaData.AirTemperatureDrift:F3} oC");
-            bcrMetaData.Add("ScanSpeed", $"{theData.MetaData.ScanSpeed} um/s");
-            bcrMetaData.Add("AngularOrientation", $"{theData.MetaData.ScanFieldRotation:F3} grad");
-            bcrMetaData.Add("ScanFieldCenterX", $"{theData.MetaData.ScanFieldCenterX * 1000:F1} mm");
-            bcrMetaData.Add("ScanFieldCenterY", $"{theData.MetaData.ScanFieldCenterY * 1000:F1} mm");
-            bcrMetaData.Add("ScanFieldCenterZ", $"{theData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
-            bcrMetaData.Add("ScanDuration", $"{theData.MetaData.ScanDuration.TotalSeconds:F0} s");
-            bcrMetaData.Add("GlitchedDataPoints", $"{theData.MetaData.NumberOfGlitchedDataPoints}");
-            bcrMetaData.Add("SpuriousDataLines", $"{theData.MetaData.SpuriousDataLines}");
-            for (int i = 0; i < theData.MetaData.ScanComments.Count; i++)
+            bcrMetaData.Add("EnvironmentMode", nmmScanData.MetaData.EnvironmentMode);
+            bcrMetaData.Add("SampleTemperature", $"{nmmScanData.MetaData.SampleTemperature:F3} oC");
+            bcrMetaData.Add("AirTemperature", $"{nmmScanData.MetaData.AirTemperature:F3} oC");
+            bcrMetaData.Add("AirPressure", $"{nmmScanData.MetaData.BarometricPressure:F0} Pa");
+            bcrMetaData.Add("AirHumidity", $"{nmmScanData.MetaData.RelativeHumidity:F1} %");
+            bcrMetaData.Add("TemperatureGradient", $"{nmmScanData.MetaData.AirTemperatureGradient:F3} oC");
+            bcrMetaData.Add("TemperatureRange", $"{nmmScanData.MetaData.AirTemperatureDrift:F3} oC");
+            bcrMetaData.Add("ScanSpeed", $"{nmmScanData.MetaData.ScanSpeed} um/s");
+            bcrMetaData.Add("AngularOrientation", $"{nmmScanData.MetaData.ScanFieldRotation:F3} grad");
+            bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterX * 1000:F1} mm");
+            bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY * 1000:F1} mm");
+            bcrMetaData.Add("ScanFieldCenterZ", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
+            bcrMetaData.Add("ScanDuration", $"{nmmScanData.MetaData.ScanDuration.TotalSeconds:F0} s");
+            bcrMetaData.Add("GlitchedDataPoints", $"{nmmScanData.MetaData.NumberOfGlitchedDataPoints}");
+            bcrMetaData.Add("SpuriousDataLines", $"{nmmScanData.MetaData.SpuriousDataLines}");
+            for (int i = 0; i < nmmScanData.MetaData.ScanComments.Count; i++)
             {
-                bcrMetaData.Add($"ScanComment{i + 1}", theData.MetaData.ScanComments[i]);
+                bcrMetaData.Add($"ScanComment{i + 1}", nmmScanData.MetaData.ScanComments[i]);
             }
 
             bcr.PrepareTrailerSection(bcrMetaData);
