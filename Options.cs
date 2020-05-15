@@ -12,7 +12,7 @@ namespace Nmm2Bcr
         [Option('s', "scan", DefaultValue = 0, HelpText = "Scan index for multi-scan files.")]
         public int ScanIndex { get; set; }
 
-        [Option('r', "reference", DefaultValue = 1, HelpText = "Height reference technique.")]
+        [Option('r', "reference", DefaultValue = 0, HelpText = "Height reference technique.")]
         public int ReferenceMode { get; set; }
 
         [Option('z', "zscale", DefaultValue = 1e-6, HelpText = "Scale factor for height axis.")]
@@ -72,7 +72,20 @@ namespace Nmm2Bcr
             help.AddPreOptionsLine("");
             help.AddPreOptionsLine("Usage: " + AppName + " filename1 [filename2] [options]");
             help.AddPostOptionsLine("");
-            help.AddPostOptionsLine("Supported values for -r: 0=nop 1=min 2=max 3=average 4=mid 5=bias 6=first 7=last 8=center 9=linear 10=LSQ 11=linear(positive) 12=LSQ(positive)");
+            help.AddPostOptionsLine("Supported values for --reference (-r):");
+            help.AddPostOptionsLine("    0: nop");
+            help.AddPostOptionsLine("    1: min");
+            help.AddPostOptionsLine("    2: max");
+            help.AddPostOptionsLine("    3: average");
+            help.AddPostOptionsLine("    4: mid");
+            help.AddPostOptionsLine("    5: bias");
+            help.AddPostOptionsLine("    6: first");
+            help.AddPostOptionsLine("    7: last");
+            help.AddPostOptionsLine("    8: center");
+            help.AddPostOptionsLine("    9: linear");
+            help.AddPostOptionsLine("   10: LSQ");
+            help.AddPostOptionsLine("   11: linear(positive)");
+            help.AddPostOptionsLine("   12: LSQ(positive)");
 
             help.AddOptions(this);
 

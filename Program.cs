@@ -155,8 +155,9 @@ namespace Nmm2Bcr
             bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY * 1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterZ", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
-            bcrMetaData.Add("ScanFieldOriginX", $"{nmmScanData.MetaData.ScanFieldCenterX} m");
-            bcrMetaData.Add("ScanFieldOriginY", $"{nmmScanData.MetaData.ScanFieldCenterY} m");
+            bcrMetaData.Add("ScanFieldOriginX", $"{nmmScanData.MetaData.ScanFieldOriginX} m");
+            bcrMetaData.Add("ScanFieldOriginY", $"{nmmScanData.MetaData.ScanFieldOriginY} m");
+            bcrMetaData.Add("ScanFieldOriginZ", $"{nmmScanData.MetaData.ScanFieldOriginZ} m");
             bcrMetaData.Add("ScanDuration", $"{nmmScanData.MetaData.ScanDuration.TotalSeconds:F0} s");
             bcrMetaData.Add("GlitchedDataPoints", $"{nmmScanData.MetaData.NumberOfGlitchedDataPoints}");
             bcrMetaData.Add("SpuriousDataLines", $"{nmmScanData.MetaData.SpuriousDataLines}");
