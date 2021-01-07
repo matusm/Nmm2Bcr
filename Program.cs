@@ -150,7 +150,7 @@ namespace Nmm2Bcr
             bcrMetaData.Add("AirHumidity", $"{nmmScanData.MetaData.RelativeHumidity:F1} %");
             bcrMetaData.Add("TemperatureGradient", $"{nmmScanData.MetaData.AirTemperatureGradient:F3} oC");
             bcrMetaData.Add("TemperatureRange", $"{nmmScanData.MetaData.AirTemperatureDrift:F3} oC");
-            bcrMetaData.Add("ScanSpeed", $"{nmmScanData.MetaData.ScanSpeed} um/s");
+            bcrMetaData.Add("ScanSpeed", $"{nmmScanData.MetaData.ScanSpeed*1e6} um/s");
             bcrMetaData.Add("AngularOrientation", $"{nmmScanData.MetaData.ScanFieldRotation:F3} grad");
             bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
             bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY * 1000:F1} mm");
