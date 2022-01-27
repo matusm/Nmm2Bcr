@@ -3,6 +3,7 @@ using Bev.IO.NmmReader;
 using Bev.IO.NmmReader.scan_mode;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Nmm2Bcr
@@ -32,6 +33,18 @@ namespace Nmm2Bcr
             nmmFileName.SetScanIndex(options.ScanIndex);
             NmmScanData nmmScanData = new NmmScanData(nmmFileName);
             ConsoleUI.Done();
+
+            // hard (re-)set options for reflective samples
+            if (options.Edge)
+                options.ReflectiveSample = true;
+            if (options.ReflectiveSample)
+            {
+                options.DoHeydemann = false;
+                options.ChannelSymbol = "AX";
+                options.ReferenceMode = 0;
+                options.ZScale = 1;
+                options.Bias = 0;
+            }
 
             //if (options.ChannelSymbol)
             if (options.DoHeydemann)
@@ -76,7 +89,7 @@ namespace Nmm2Bcr
             bcr.Relaxed = !options.Strict; // overrules Relaxed
             ConsoleUI.WriteLine(bcr.Relaxed ? "Relaxed formatting" : "Strict formatting");
             bcr.ForceIsoFormat = options.IsoFormat;
-            ConsoleUI.WriteLine(bcr.ForceIsoFormat? "ISO 25178-71 format" : "Legacy format");
+            ConsoleUI.WriteLine(bcr.ForceIsoFormat ? "ISO 25178-71 format" : "Legacy format");
             // ISO 25178-71 file header
             bcr.CreationDate = nmmScanData.MetaData.CreationDate;
             bcr.ManufacurerId = nmmScanData.MetaData.InstrumentIdentifier;
@@ -110,11 +123,7 @@ namespace Nmm2Bcr
             levelObject.BiasValue = options.Bias * 1.0e-6; //  bias is given in µm on the command line
             double[] leveledTopographyData = levelObject.LevelData(MapOptionToReference(options.ReferenceMode));
 
-            // ISO 25178-71 main section
-            bcr.PrepareMainSection(leveledTopographyData);
-
-            // ISO 25178-71 file trailer
-            // generate a dictionary with all relevant metadata
+            // generate a dictionary with all relevant metadata for the ISO 25178-71 file trailer
             Dictionary<string, string> bcrMetaData = new Dictionary<string, string>();
             bcrMetaData.Add("InputFile", nmmScanData.MetaData.BaseFileName);
             bcrMetaData.Add("ConvertedBy", $"{ConsoleUI.Title} version {ConsoleUI.Version}");
@@ -150,11 +159,11 @@ namespace Nmm2Bcr
             bcrMetaData.Add("AirHumidity", $"{nmmScanData.MetaData.RelativeHumidity:F1} %");
             bcrMetaData.Add("TemperatureGradient", $"{nmmScanData.MetaData.AirTemperatureGradient:F3} oC");
             bcrMetaData.Add("TemperatureRange", $"{nmmScanData.MetaData.AirTemperatureDrift:F3} oC");
-            bcrMetaData.Add("ScanSpeed", $"{nmmScanData.MetaData.ScanSpeed*1e6} um/s");
+            bcrMetaData.Add("ScanSpeed", $"{nmmScanData.MetaData.ScanSpeed * 1e6} um/s");
             bcrMetaData.Add("AngularOrientation", $"{nmmScanData.MetaData.ScanFieldRotation:F3} grad");
-            bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
-            bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY * 1000:F1} mm");
-            bcrMetaData.Add("ScanFieldCenterZ", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F1} mm");
+            bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F3} mm");
+            bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY * 1000:F3} mm");
+            bcrMetaData.Add("ScanFieldCenterZ", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F3} mm");
             bcrMetaData.Add("ScanFieldOriginX", $"{nmmScanData.MetaData.ScanFieldOriginX} m");
             bcrMetaData.Add("ScanFieldOriginY", $"{nmmScanData.MetaData.ScanFieldOriginY} m");
             bcrMetaData.Add("ScanFieldOriginZ", $"{nmmScanData.MetaData.ScanFieldOriginZ} m");
@@ -166,6 +175,38 @@ namespace Nmm2Bcr
                 bcrMetaData.Add($"ScanComment{i + 1}", nmmScanData.MetaData.ScanComments[i]);
             }
 
+            // ISO 25178-71 main section
+            if (options.ReflectiveSample)
+            {
+                int[] reflectiveField = leveledTopographyData.Select(x => Convert.ToInt32(x)).ToArray();
+                IntensityEvaluator ie = new IntensityEvaluator(reflectiveField);
+                Classifier cl = new Classifier(reflectiveField);
+                int[] segmentedField = cl.GetSegmentedProfile(options.Threshold, ie.LowerBound, ie.UpperBound);
+                if (options.Edge)
+                {
+                    int[] edgeField = new int[segmentedField.Length];
+                    for (int i = 1; i < edgeField.Length; i++)
+                        if (segmentedField[i - 1] + segmentedField[i] == 1)
+                            edgeField[i] = 1;
+                    bcr.PrepareMainSection(edgeField);
+                    ExportEdgeAsCsv(edgeField);
+                }
+                else
+                    bcr.PrepareMainSection(segmentedField);
+
+                bcrMetaData.Add("X-Threshold", $"{options.Threshold:F3}");
+                bcrMetaData.Add("X-MinimumIntensity", $"{ie.MinIntensity}");
+                bcrMetaData.Add("X-MaximumIntensity", $"{ie.MaxIntensity}");
+                bcrMetaData.Add("X-LowerPlateau", $"{ie.LowerBound}");
+                bcrMetaData.Add("X-UpperPlateau", $"{ie.UpperBound}");
+                bcrMetaData.Add("X-EdgeFilter", $"{options.Edge}");
+            }
+            else
+            {
+                bcr.PrepareMainSection(leveledTopographyData);
+            }
+
+            // ISO 25178-71 file trailer
             bcr.PrepareTrailerSection(bcrMetaData);
 
             // now generate output
@@ -182,6 +223,36 @@ namespace Nmm2Bcr
                 ConsoleUI.ErrorExit("!could not write file", 4);
             }
             ConsoleUI.Done();
+
+            // very dirty implementation of the CSV file writer for the edge points
+            void ExportEdgeAsCsv(int[] edgeField)
+            {
+                // open csv
+                string csvFileName = nmmFileName.GetFreeFileNameWithIndex("csv");
+                try
+                {
+                    StreamWriter hCsvFile = File.CreateText(csvFileName);
+                    ConsoleUI.WritingFile(csvFileName);
+                    hCsvFile.WriteLine("x_scanfield / m , y_scanfield / m");
+                    for (int index = 0; index < edgeField.Length; index++)
+                    {
+                        if (edgeField[index] == 1)
+                        {
+                            int pointsIndex = index % nmmScanData.MetaData.NumberOfDataPoints;
+                            int profileIndex = index / nmmScanData.MetaData.NumberOfDataPoints;
+                            double xField = pointsIndex * nmmScanData.MetaData.ScanFieldDeltaX;
+                            double yField = profileIndex * nmmScanData.MetaData.ScanFieldDeltaY;
+                            hCsvFile.WriteLine($"{xField} , {yField}");
+                        }
+                    }
+                    hCsvFile.Close();
+                    ConsoleUI.Done();
+                }
+                catch (Exception)
+                {
+                    // just ignore
+                }
+            }
         }
 
         // this method is used to map the numerical option to the apropiate enumeration
@@ -217,6 +288,5 @@ namespace Nmm2Bcr
                     return ReferenceTo.None;
             }
         }
-
     }
 }
