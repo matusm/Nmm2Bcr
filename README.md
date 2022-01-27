@@ -2,7 +2,9 @@ Nmm2Bcr - NMM Data to BCR Converter
 ===================================
 
 A standalone command line tool that converts files produced by the [SIOS](https://sios-de.com) NMM-1.
-The produced GPS data files are formatted according to ISO 25178-7, ISO 25178-71 and EUNA 15178 (BCR). All files are ASCII (text) files, the (currently deprecated) option to produce binary files is not implemented. 
+The converted GPS data files are formatted according to ISO 25178-7, ISO 25178-71 and EUNA 15178 (BCR). All files are ASCII (text) files, the (currently deprecated) option to produce binary files is not implemented. 
+
+Starting from version 2.4 a rudimentary data processing capability for reflective surface scans is implemented. Basically a binary segmentation of reflective vs not reflective is performed. A user supplied value determines the threshold. Additionaly one can extract the edge, both as a surface data file and as as a CSV file, respectively.
 
 ## Command Line Usage:  
 
@@ -68,13 +70,21 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 12: first apply 10, then 1
 
+### Options for reflective scan data manipulation (experimental)
+
+`-X` : Process reflective samples. Sets channel to "AX" and disables some other options.
+
+`--threshold (-t)` : Threshold for segmentation. Default value is 0.5.
+
+`-E` : Extract edge only. Additionaly a CSV file with the 2-D coordinates of the edge points is generated. The `-X` option is automatically selected.
+
 ## Effect of the `--strict` command line option
 
 * Field dimensions are restricted to 65535 at most;
 
 * The ManufacID is trimmed to 10 characters;
 
-* Invalid data points are coded by `BAD` instead of `NaN`.
+* Invalid data points are coded by the string `BAD` instead of `NaN`.
 
 ## Dependencies  
 Bev.IO.NmmReader:  https://github.com/matusm/Bev.IO.NmmReader  

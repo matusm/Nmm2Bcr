@@ -12,7 +12,7 @@ namespace Nmm2Bcr
         [Option('t', "threshold", DefaultValue = 0.5, HelpText = "Threshold for segmentation. For -X option only")]
         public double Threshold { get; set; }
 
-        [Option('E', HelpText = "Edge only. For -X option only")]
+        [Option('E', HelpText = "Edge only. Implies -X option. (experimental)")]
         public bool Edge { get; set; }
 
         [Option('c', "channel", DefaultValue = "-LZ+AZ", HelpText = "Channel to export.")]
