@@ -227,7 +227,6 @@ namespace Nmm2Bcr
             // very dirty implementation of the CSV file writer for the edge points
             void ExportEdgeAsCsv(int[] edgeField)
             {
-                // open csv
                 string csvFileName = nmmFileName.GetFreeFileNameWithIndex("csv");
                 try
                 {
@@ -242,7 +241,7 @@ namespace Nmm2Bcr
                             int profileIndex = index / nmmScanData.MetaData.NumberOfDataPoints;
                             double xField = pointsIndex * nmmScanData.MetaData.ScanFieldDeltaX;
                             double yField = profileIndex * nmmScanData.MetaData.ScanFieldDeltaY;
-                            hCsvFile.WriteLine($"{xField} , {yField}");
+                            hCsvFile.WriteLine($"{xField:F9} , {yField:F9}");
                         }
                     }
                     hCsvFile.Close();
@@ -250,7 +249,7 @@ namespace Nmm2Bcr
                 }
                 catch (Exception)
                 {
-                    // just ignore
+                    // file problem, just ignore
                 }
             }
         }
