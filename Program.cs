@@ -109,6 +109,8 @@ namespace Nmm2Bcr
             bcr.XScale = nmmScanData.MetaData.ScanFieldDeltaX;
             bcr.ZScale = options.ZScale;
 
+            if (options.ReflectiveSample) ConsoleUI.WriteLine("Reflective sample evaluation");
+
             // read actual topography data for given channel
             if (!nmmScanData.ColumnPresent(options.ChannelSymbol))
                 ConsoleUI.ErrorExit($"!Channel {options.ChannelSymbol} not in scan data", 5);
