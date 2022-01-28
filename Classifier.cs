@@ -10,7 +10,7 @@
 
         public int[] GetSegmentedProfile(double threshold, int lower, int upper)
         {
-            int intThreshold = (int)((upper - lower) * threshold);
+            int intThreshold = (int)((upper - lower) * threshold) + lower;
             int[] segmented = new int[intensity.Length];
             for (int i = 0; i < segmented.Length; i++)
             {
