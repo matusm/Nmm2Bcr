@@ -234,7 +234,15 @@ namespace Nmm2Bcr
                 {
                     StreamWriter hCsvFile = File.CreateText(csvFileName);
                     ConsoleUI.WritingFile(csvFileName);
-                    hCsvFile.WriteLine("x_scanfield / m , y_scanfield / m");
+                    if(options.GlobalCoords)
+                    {
+                        hCsvFile.WriteLine("x_global , y_global");
+                    }
+                    else
+                    {
+                        hCsvFile.WriteLine("x_scanfield , y_scanfield");
+                    }
+                    hCsvFile.WriteLine("m , m");
                     for (int index = 0; index < edgeField.Length; index++)
                     {
                         if (edgeField[index] == 1)
@@ -243,6 +251,11 @@ namespace Nmm2Bcr
                             int profileIndex = index / nmmScanData.MetaData.NumberOfDataPoints;
                             double xField = pointsIndex * nmmScanData.MetaData.ScanFieldDeltaX;
                             double yField = profileIndex * nmmScanData.MetaData.ScanFieldDeltaY;
+                            if(options.GlobalCoords)
+                            {
+                                xField += nmmScanData.MetaData.ScanFieldOriginX;
+                                yField += nmmScanData.MetaData.ScanFieldOriginY;
+                            }
                             hCsvFile.WriteLine($"{xField:F10} , {yField:F10}");
                         }
                     }

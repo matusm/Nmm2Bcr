@@ -15,6 +15,9 @@ namespace Nmm2Bcr
         [Option('E', HelpText = "Edge only. Implies -X option. (experimental)")]
         public bool Edge { get; set; }
 
+        [Option("global", HelpText = "CSV in machine coordinates. (experimental, scan field must be well oriented!)")]
+        public bool GlobalCoords { get; set; }
+
         [Option('c', "channel", DefaultValue = "-LZ+AZ", HelpText = "Channel to export.")]
         public string ChannelSymbol { get; set; }
 
