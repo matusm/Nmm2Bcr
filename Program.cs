@@ -243,7 +243,7 @@ namespace Nmm2Bcr
                             int profileIndex = index / nmmScanData.MetaData.NumberOfDataPoints;
                             double xField = pointsIndex * nmmScanData.MetaData.ScanFieldDeltaX;
                             double yField = profileIndex * nmmScanData.MetaData.ScanFieldDeltaY;
-                            hCsvFile.WriteLine($"{xField:F9} , {yField:F9}");
+                            hCsvFile.WriteLine($"{xField:F10} , {yField:F10}");
                         }
                     }
                     hCsvFile.Close();
