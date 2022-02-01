@@ -234,6 +234,7 @@ namespace Nmm2Bcr
                 {
                     StreamWriter hCsvFile = File.CreateText(csvFileName);
                     ConsoleUI.WritingFile(csvFileName);
+                    hCsvFile.WriteLine($"# SampleTemperature = {nmmScanData.MetaData.SampleTemperature:F3}");
                     if(options.GlobalCoords)
                     {
                         hCsvFile.WriteLine("x_global , y_global");
