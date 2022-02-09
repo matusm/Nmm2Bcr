@@ -3,7 +3,6 @@ using Bev.IO.NmmReader;
 using Bev.IO.NmmReader.scan_mode;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Nmm2Bcr
