@@ -16,13 +16,12 @@ namespace Nmm2Bcr
             var options = new Options();
             if (!CommandLine.Parser.Default.ParseArgumentsStrict(args, options))
                 Console.WriteLine("*** ParseArgumentsStrict returned false");
-            // consume the verbosity option
             if (options.BeQuiet == true)
                 ConsoleUI.BeSilent();
             else
                 ConsoleUI.BeVerbatim();
-            // print a welcome message
             ConsoleUI.Welcome();
+
             // get the filename(s)
             string[] fileNames = options.ListOfFileNames.ToArray();
             if (fileNames.Length == 0)
@@ -34,19 +33,6 @@ namespace Nmm2Bcr
             NmmScanData nmmScanData = new NmmScanData(nmmFileName);
             ConsoleUI.Done();
 
-            // hard (re-)set options for reflective samples
-            if (options.Edge)
-                options.ReflectiveSample = true;
-            if (options.ReflectiveSample)
-            {
-                options.DoHeydemann = false;
-                options.ChannelSymbol = "AX";
-                options.ReferenceMode = 0;
-                options.ZScale = 1;
-                options.Bias = 0;
-            }
-
-            //if (options.ChannelSymbol)
             if (options.DoHeydemann)
             {
                 nmmScanData.ApplyHeydemannCorrection();
@@ -90,6 +76,7 @@ namespace Nmm2Bcr
             ConsoleUI.WriteLine(bcr.Relaxed ? "Relaxed formatting" : "Strict formatting");
             bcr.ForceIsoFormat = options.IsoFormat;
             ConsoleUI.WriteLine(bcr.ForceIsoFormat ? "ISO 25178-71 format" : "Legacy format");
+
             // ISO 25178-71 file header
             bcr.CreationDate = nmmScanData.MetaData.CreationDate;
             bcr.ManufacurerId = nmmScanData.MetaData.InstrumentIdentifier;
@@ -108,8 +95,6 @@ namespace Nmm2Bcr
             }
             bcr.XScale = nmmScanData.MetaData.ScanFieldDeltaX;
             bcr.ZScale = options.ZScale;
-
-            if (options.ReflectiveSample) ConsoleUI.WriteLine("Reflective sample evaluation");
 
             // read actual topography data for given channel
             if (!nmmScanData.ColumnPresent(options.ChannelSymbol))
@@ -178,35 +163,7 @@ namespace Nmm2Bcr
             }
 
             // ISO 25178-71 main section
-            if (options.ReflectiveSample)
-            {
-                int[] reflectiveField = leveledTopographyData.Select(x => Convert.ToInt32(x)).ToArray();
-                IntensityEvaluator ie = new IntensityEvaluator(reflectiveField);
-                Classifier cl = new Classifier(reflectiveField);
-                int[] segmentedField = cl.GetSegmentedProfile(options.Threshold, ie.LowerBound, ie.UpperBound);
-                if (options.Edge)
-                {
-                    int[] edgeField = new int[segmentedField.Length];
-                    for (int i = 1; i < edgeField.Length; i++)
-                        if (segmentedField[i - 1] + segmentedField[i] == 1)
-                            edgeField[i] = 1;
-                    bcr.PrepareMainSection(edgeField);
-                    ExportEdgeAsCsv(edgeField);
-                }
-                else
-                    bcr.PrepareMainSection(segmentedField);
-
-                bcrMetaData.Add("X-Threshold", $"{options.Threshold:F3}");
-                bcrMetaData.Add("X-MinimumIntensity", $"{ie.MinIntensity}");
-                bcrMetaData.Add("X-MaximumIntensity", $"{ie.MaxIntensity}");
-                bcrMetaData.Add("X-LowerPlateau", $"{ie.LowerBound}");
-                bcrMetaData.Add("X-UpperPlateau", $"{ie.UpperBound}");
-                bcrMetaData.Add("X-EdgeFilter", $"{options.Edge}");
-            }
-            else
-            {
-                bcr.PrepareMainSection(leveledTopographyData);
-            }
+            bcr.PrepareMainSection(leveledTopographyData);
 
             // ISO 25178-71 file trailer
             bcr.PrepareTrailerSection(bcrMetaData);
@@ -225,49 +182,6 @@ namespace Nmm2Bcr
                 ConsoleUI.ErrorExit("!could not write file", 4);
             }
             ConsoleUI.Done();
-
-            // very dirty implementation of the CSV file writer for the edge points
-            void ExportEdgeAsCsv(int[] edgeField)
-            {
-                string csvFileName = nmmFileName.GetFreeFileNameWithIndex("csv");
-                try
-                {
-                    StreamWriter hCsvFile = File.CreateText(csvFileName);
-                    ConsoleUI.WritingFile(csvFileName);
-                    hCsvFile.WriteLine($"# SampleTemperature = {nmmScanData.MetaData.SampleTemperature:F3}");
-                    if(options.GlobalCoords)
-                    {
-                        hCsvFile.WriteLine("x_global , y_global");
-                    }
-                    else
-                    {
-                        hCsvFile.WriteLine("x_scanfield , y_scanfield");
-                    }
-                    hCsvFile.WriteLine("m , m");
-                    for (int index = 0; index < edgeField.Length; index++)
-                    {
-                        if (edgeField[index] == 1)
-                        {
-                            int pointsIndex = index % nmmScanData.MetaData.NumberOfDataPoints;
-                            int profileIndex = index / nmmScanData.MetaData.NumberOfDataPoints;
-                            double xField = pointsIndex * nmmScanData.MetaData.ScanFieldDeltaX;
-                            double yField = profileIndex * nmmScanData.MetaData.ScanFieldDeltaY;
-                            if(options.GlobalCoords)
-                            {
-                                xField += nmmScanData.MetaData.ScanFieldOriginX;
-                                yField += nmmScanData.MetaData.ScanFieldOriginY;
-                            }
-                            hCsvFile.WriteLine($"{xField:F10} , {yField:F10}");
-                        }
-                    }
-                    hCsvFile.Close();
-                    ConsoleUI.Done();
-                }
-                catch (Exception)
-                {
-                    // file problem, just ignore
-                }
-            }
         }
 
         // this method is used to map the numerical option to the apropiate enumeration

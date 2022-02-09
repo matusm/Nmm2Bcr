@@ -6,18 +6,6 @@ namespace Nmm2Bcr
 {
     class Options
     {
-        [Option('X', HelpText = "Process reflective samples. (experimental)")]
-        public bool ReflectiveSample { get; set; }
-
-        [Option('t', "threshold", DefaultValue = 0.5, HelpText = "Threshold for segmentation. For -X option only")]
-        public double Threshold { get; set; }
-
-        [Option('E', HelpText = "Edge only. Implies -X option. (experimental)")]
-        public bool Edge { get; set; }
-
-        [Option("global", HelpText = "CSV in machine coordinates. (experimental, scan field must be well oriented!)")]
-        public bool GlobalCoords { get; set; }
-
         [Option('c', "channel", DefaultValue = "-LZ+AZ", HelpText = "Channel to export.")]
         public string ChannelSymbol { get; set; }
 
