@@ -34,14 +34,14 @@ namespace Nmm2Bcr
 
             if (options.DoHeydemann)
             {
-                nmmScanData.ApplyHeydemannCorrection();
-                if (nmmScanData.HeydemannCorrectionApplied)
+                nmmScanData.ApplyNLcorrection();
+                if (nmmScanData.NLcorrectionApplied)
                 {
-                    ConsoleUI.WriteLine($"Heydemann correction applied, span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                    ConsoleUI.WriteLine($"Interferometric nonlinearity correction applied, span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
                 }
                 else
                 {
-                    ConsoleUI.WriteLine($"Heydemann correction not successful.");
+                    ConsoleUI.WriteLine($"Interferometric nonlinearity correction not successful.");
                 }
             }
 
