@@ -35,9 +35,9 @@ namespace Nmm2Bcr
             if (options.DoHeydemann)
             {
                 nmmScanData.ApplyNLcorrection();
-                if (nmmScanData.NLcorrectionApplied)
+                if (nmmScanData.NonlinearityCorrectionApplied)
                 {
-                    ConsoleUI.WriteLine($"Interferometric nonlinearity correction applied, span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                    ConsoleUI.WriteLine($"Interferometric nonlinearity correction applied, span {nmmScanData.NonlinearityCorrectionSpan * 1e9:F1} nm");
                 }
                 else
                 {
@@ -136,7 +136,7 @@ namespace Nmm2Bcr
             bcrMetaData.Add("ReferenceDatum", levelObject.LevelModeDescription);
             if (nmmScanData.HeydemannCorrectionApplied)
             {
-                bcrMetaData.Add("HeydemannCorrection", $"Span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                bcrMetaData.Add("HeydemannCorrection", $"Span {nmmScanData.NonlinearityCorrectionSpan * 1e9:F1} nm");
             }
             bcrMetaData.Add("EnvironmentMode", nmmScanData.MetaData.EnvironmentMode);
             bcrMetaData.Add("SampleTemperature", $"{nmmScanData.MetaData.SampleTemperature:F3} oC");
