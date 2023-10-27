@@ -134,9 +134,10 @@ namespace Nmm2Bcr
                 bcrMetaData.Add("Scan", $"{nmmScanData.MetaData.ScanIndex}");
             }
             bcrMetaData.Add("ReferenceDatum", levelObject.LevelModeDescription);
-            if (nmmScanData.HeydemannCorrectionApplied)
+            if (nmmScanData.NonlinearityCorrectionApplied)
             {
-                bcrMetaData.Add("HeydemannCorrection", $"Span {nmmScanData.NonlinearityCorrectionSpan * 1e9:F1} nm");
+                bcrMetaData.Add("HeydemannCorrection", $"Span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
+                bcrMetaData.Add("DaiCorrection", $"Span {nmmScanData.DaiCorrectionSpan * 1e9:F1} nm");
             }
             bcrMetaData.Add("EnvironmentMode", nmmScanData.MetaData.EnvironmentMode);
             bcrMetaData.Add("SampleTemperature", $"{nmmScanData.MetaData.SampleTemperature:F3} oC");
