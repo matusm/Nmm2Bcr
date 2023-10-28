@@ -113,6 +113,7 @@ namespace Nmm2Bcr
             Dictionary<string, string> bcrMetaData = new Dictionary<string, string>();
             bcrMetaData.Add("InputFile", nmmScanData.MetaData.BaseFileName);
             bcrMetaData.Add("ConvertedBy", $"{ConsoleUI.Title} version {ConsoleUI.Version}");
+            bcrMetaData.Add("NMMReader", $"{typeof(NmmScanData).Assembly.GetName().Name} version {typeof(NmmScanData).Assembly.GetName().Version}");
             bcrMetaData.Add("UserComment", options.UserComment);
             bcrMetaData.Add("OperatorName", nmmScanData.MetaData.User);
             bcrMetaData.Add("Organisation", nmmScanData.MetaData.Organisation);
