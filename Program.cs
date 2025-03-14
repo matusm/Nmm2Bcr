@@ -1,33 +1,76 @@
 ﻿using Bev.IO.BcrWriter;
 using Bev.IO.NmmReader;
 using Bev.IO.NmmReader.scan_mode;
+using CommandLine;
+using CommandLine.Text;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 
 namespace Nmm2Bcr
 {
     class Program
     {
-        static void Main(string[] args)
+        private static Options options = new Options(); // this must be set in Run()
+
+        public static void Main(string[] args)
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            Parser parser = new Parser(with => with.HelpWriter = null);
+            ParserResult<Options> parserResult = parser.ParseArguments<Options>(args);
+            parserResult
+                .WithParsed<Options>(options => Run(options))
+                .WithNotParsed(errs => DisplayHelp(parserResult, errs));
+        }
+
+        private static void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
+        {
+            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            HelpText helpText = HelpText.AutoBuild(result, h =>
+            {
+                h.AutoVersion = false;
+                h.AdditionalNewLineAfterOption = false;
+                h.AddPreOptionsLine("\nProgram to convert scanning files by SIOS NMM - 1 to BCR or ISO 25178 - 71:2012 raster data format. " +
+                "The quadruple of files (dat ind dsc pos) are analyzed to obtain the required parameters. " +
+                "A rudimentary data processing is implemented via the -r option.");
+                h.AddPreOptionsLine("");
+                h.AddPreOptionsLine($"Usage: {appName} InputPath [OutPath] [options]");
+                h.AddPostOptionsLine("");
+                h.AddPostOptionsLine("Supported values for --reference (-r):");
+                h.AddPostOptionsLine("    0: nop");
+                h.AddPostOptionsLine("    1: min");
+                h.AddPostOptionsLine("    2: max");
+                h.AddPostOptionsLine("    3: average");
+                h.AddPostOptionsLine("    4: mid");
+                h.AddPostOptionsLine("    5: bias");
+                h.AddPostOptionsLine("    6: first");
+                h.AddPostOptionsLine("    7: last");
+                h.AddPostOptionsLine("    8: center");
+                h.AddPostOptionsLine("    9: linear");
+                h.AddPostOptionsLine("   10: LSQ");
+                h.AddPostOptionsLine("   11: linear(positive)");
+                h.AddPostOptionsLine("   12: LSQ(positive)");
+                return HelpText.DefaultParsingErrorsHandler(result, h);
+            }, e => e);
+            Console.WriteLine(helpText);
+        }
+
+        private static void Run(Options ops)
+        {
+            options = ops;
+
             // parse command line arguments
-            var options = new Options();
-            if (!CommandLine.Parser.Default.ParseArgumentsStrict(args, options))
-                Console.WriteLine("*** ParseArgumentsStrict returned false");
             if (options.BeQuiet == true)
                 ConsoleUI.BeSilent();
             else
                 ConsoleUI.BeVerbatim();
             ConsoleUI.Welcome();
 
-            // get the filename(s)
-            string[] fileNames = options.ListOfFileNames.ToArray();
-            if (fileNames.Length == 0)
+            if (string.IsNullOrWhiteSpace(options.InputPath))
                 ConsoleUI.ErrorExit("!Missing input file", 1);
-            // read all relevant scan data
+
             ConsoleUI.StartOperation("Reading and evaluating files");
-            NmmFileName nmmFileName = new NmmFileName(fileNames[0]);
+            NmmFileName nmmFileName = new NmmFileName(options.InputPath);
             nmmFileName.SetScanIndex(options.ScanIndex);
             NmmScanData nmmScanData = new NmmScanData(nmmFileName);
             ConsoleUI.Done();
@@ -89,7 +132,7 @@ namespace Nmm2Bcr
             else
             {
                 bcr.NumberOfProfiles = 1;
-                bcr.YScale = 0;
+                bcr.YScale = 0; // TODO: must be != 0
                 ConsoleUI.WriteLine($"Extract single profile {options.ProfileIndex} only");
             }
             bcr.XScale = nmmScanData.MetaData.ScanFieldDeltaX;
@@ -171,11 +214,14 @@ namespace Nmm2Bcr
 
             // now generate output
             string outFileName;
-            if (fileNames.Length >= 2)
-                outFileName = fileNames[1];
-            else
+            if (string.IsNullOrWhiteSpace(options.OutputPath))
+            {
                 outFileName = nmmFileName.GetFreeFileNameWithIndex("sdf");
-
+            }
+            else
+            {
+                outFileName = options.OutputPath;
+            }
             ConsoleUI.WritingFile(outFileName);
             if (!bcr.WriteToFile(outFileName))
             {

@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Nmm2Bcr</RootNamespace>
     <AssemblyName>Nmm2Bcr</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -36,6 +36,9 @@
     <Reference Include="Bev.IO.BcrWriter">
       <HintPath>..\Bev.IO.BcrWriter\Bev.IO.BcrWriter\bin\Release\Bev.IO.BcrWriter.dll</HintPath>
     </Reference>
+    <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <HintPath>packages\CommandLineParser.2.9.1\lib\net461\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,9 +49,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="Bev.IO.NmmReader">
       <HintPath>..\Bev.IO.NmmReader\Bev.IO.NmmReader\bin\Release\Bev.IO.NmmReader.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandLine">
-      <HintPath>packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
