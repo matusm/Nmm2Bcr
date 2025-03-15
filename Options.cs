@@ -46,6 +46,9 @@ namespace Nmm2Bcr
         [Option('p', "profile", Default = 0, HelpText = "Extract single profile.")]
         public int ProfileIndex { get; set; }
 
+        [Option("1Dprofile", HelpText = "Force profile to be of width 0.")]
+        public bool LineOnly { get; set; }
+
         [Value(0, MetaName = "InputPath", Required = true, HelpText = "Input file-name including path")]
         public string InputPath { get; set; }
 

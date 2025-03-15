@@ -6,6 +6,7 @@ using CommandLine.Text;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace Nmm2Bcr
 {
@@ -129,7 +130,12 @@ namespace Nmm2Bcr
             else
             {
                 bcr.NumberOfProfiles = 1;
-                bcr.YScale = 0; // TODO: must be != 0
+                if (nmmScanData.MetaData.ScanFieldDeltaY == 0)
+                    bcr.YScale = nmmScanData.MetaData.ScanFieldDeltaX; // quadratic pixels for single profile lines
+                else
+                    bcr.YScale = nmmScanData.MetaData.ScanFieldDeltaY;
+                if (options.LineOnly) 
+                    bcr.YScale = 0; // but force 1D line if requested
                 ConsoleUI.WriteLine($"Extract single profile {options.ProfileIndex} only");
             }
             bcr.XScale = nmmScanData.MetaData.ScanFieldDeltaX;
@@ -152,8 +158,9 @@ namespace Nmm2Bcr
             // generate a dictionary with all relevant metadata for the ISO 25178-71 file trailer
             Dictionary<string, string> bcrMetaData = new Dictionary<string, string>();
             bcrMetaData.Add("InputFile", nmmScanData.MetaData.BaseFileName);
-            bcrMetaData.Add("ConvertedBy", $"{ConsoleUI.Title} version {ConsoleUI.Version}");
-            bcrMetaData.Add("NMMReader", $"{typeof(NmmScanData).Assembly.GetName().Name} version {typeof(NmmScanData).Assembly.GetName().Version}");
+            bcrMetaData.Add("ConvertedBy", $"{HeadingInfo.Default}");
+            bcrMetaData.Add("NMMReader", $"{typeof(NmmScanData).Assembly.GetName().Name} {typeof(NmmScanData).Assembly.GetName().Version}");
+            bcrMetaData.Add("BcrWriter", $"{typeof(BcrWriter).Assembly.GetName().Name} {typeof(BcrWriter).Assembly.GetName().Version}");
             bcrMetaData.Add("UserComment", options.UserComment);
             bcrMetaData.Add("OperatorName", nmmScanData.MetaData.User);
             bcrMetaData.Add("Organisation", nmmScanData.MetaData.Organisation);
@@ -178,7 +185,7 @@ namespace Nmm2Bcr
             if (nmmScanData.NonlinearityCorrectionApplied)
             {
                 bcrMetaData.Add("HeydemannCorrection", $"Span {nmmScanData.HeydemannCorrectionSpan * 1e9:F1} nm");
-                bcrMetaData.Add("DaiCorrection", $"Span {nmmScanData.DaiCorrectionSpan * 1e9:F1} nm");
+                bcrMetaData.Add("MatusDaiCorrection", $"Span {nmmScanData.DaiCorrectionSpan * 1e9:F1} nm");
             }
             bcrMetaData.Add("EnvironmentMode", nmmScanData.MetaData.EnvironmentMode);
             bcrMetaData.Add("SampleTemperature", $"{nmmScanData.MetaData.SampleTemperature:F3} oC");
@@ -210,15 +217,7 @@ namespace Nmm2Bcr
             bcr.PrepareTrailerSection(bcrMetaData);
 
             // now generate output
-            string outFileName;
-            if (string.IsNullOrWhiteSpace(options.OutputPath))
-            {
-                outFileName = nmmFileName.GetFreeFileNameWithIndex("sdf");
-            }
-            else
-            {
-                outFileName = options.OutputPath;
-            }
+            string outFileName = GetOutputFilename(nmmFileName);
             ConsoleUI.WritingFile(outFileName);
             if (!bcr.WriteToFile(outFileName))
             {
@@ -226,6 +225,26 @@ namespace Nmm2Bcr
                 ConsoleUI.ErrorExit("!could not write file", 4);
             }
             ConsoleUI.Done();
+        }
+
+        static string GetOutputFilename(NmmFileName nfm)
+        {
+            string outFileName;
+            if (string.IsNullOrWhiteSpace(options.OutputPath))
+            {
+                outFileName = nfm.GetFreeFileNameWithIndex("sdf");
+                if(!string.Equals(options.ChannelSymbol, "-LZ+AZ", StringComparison.OrdinalIgnoreCase))
+                {
+                    string suffix = $"_{options.ChannelSymbol.ToUpper()}";
+                    outFileName = $"{Path.GetFileNameWithoutExtension(outFileName)}{suffix}{Path.GetExtension(outFileName)}";
+                }
+            }
+            else
+            {
+                outFileName = options.OutputPath;
+            }
+
+            return outFileName;
         }
 
         // this method is used to map the numerical option to the apropiate enumeration
