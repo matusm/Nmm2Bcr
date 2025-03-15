@@ -66,9 +66,6 @@ namespace Nmm2Bcr
                 ConsoleUI.BeVerbatim();
             ConsoleUI.Welcome();
 
-            if (string.IsNullOrWhiteSpace(options.InputPath))
-                ConsoleUI.ErrorExit("!Missing input file", 1);
-
             ConsoleUI.StartOperation("Reading and evaluating files");
             NmmFileName nmmFileName = new NmmFileName(options.InputPath);
             nmmFileName.SetScanIndex(options.ScanIndex);
