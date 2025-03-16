@@ -32,7 +32,9 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 `--strict` : Disable large (>65535) field dimension and other goodies.
 
-`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recommended, Gwyddion will currently ignore metadata).
+`--iso` : Force output file to be ISO 25178-71:2012 compliant (not recommended, Gwyddion will currently ignore metadata of this format).
+
+`--1Dprofile` : Force single profiles to be of width 0. Although compliant with the standard, Gwyddion cannot use files with `Yscale = 0`.
 
 ### Options for height data transformation
 

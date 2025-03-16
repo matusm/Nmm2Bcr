@@ -157,16 +157,16 @@ namespace Nmm2Bcr
 
             // generate a dictionary with all relevant metadata for the ISO 25178-71 file trailer
             Dictionary<string, string> bcrMetaData = new Dictionary<string, string>();
+            bcrMetaData.Add("SampleIdentifier", nmmScanData.MetaData.SampleIdentifier);
+            bcrMetaData.Add("SampleSpecies", nmmScanData.MetaData.SampleSpecies);
+            bcrMetaData.Add("SampleSpecification", nmmScanData.MetaData.SampleSpecification);
+            bcrMetaData.Add("UserComment", options.UserComment);
             bcrMetaData.Add("InputFile", nmmScanData.MetaData.BaseFileName);
             bcrMetaData.Add("ConvertedBy", $"{HeadingInfo.Default}");
             bcrMetaData.Add("NMMReader", $"{typeof(NmmScanData).Assembly.GetName().Name} {typeof(NmmScanData).Assembly.GetName().Version}");
             bcrMetaData.Add("BcrWriter", $"{typeof(BcrWriter).Assembly.GetName().Name} {typeof(BcrWriter).Assembly.GetName().Version}");
-            bcrMetaData.Add("UserComment", options.UserComment);
             bcrMetaData.Add("OperatorName", nmmScanData.MetaData.User);
             bcrMetaData.Add("Organisation", nmmScanData.MetaData.Organisation);
-            bcrMetaData.Add("SampleIdentifier", nmmScanData.MetaData.SampleIdentifier);
-            bcrMetaData.Add("SampleSpecies", nmmScanData.MetaData.SampleSpecies);
-            bcrMetaData.Add("SampleSpecification", nmmScanData.MetaData.SampleSpecification);
             bcrMetaData.Add("SPMtechnique", nmmScanData.MetaData.SpmTechnique);
             bcrMetaData.Add("Probe", nmmScanData.MetaData.ProbeDesignation);
             bcrMetaData.Add("ZAxisSource", options.ChannelSymbol);
