@@ -125,18 +125,19 @@ namespace Nmm2Bcr
             {
                 bcr.NumberOfProfiles = nmmScanData.MetaData.NumberOfProfiles;
                 bcr.YScale = nmmScanData.MetaData.ScanFieldDeltaY;
-                ConsoleUI.WriteLine("Extract complete scanfield");
             }
             else
             {
                 bcr.NumberOfProfiles = 1;
+            }
+            if (bcr.NumberOfProfiles == 1)
+            {
                 if (nmmScanData.MetaData.ScanFieldDeltaY == 0)
                     bcr.YScale = nmmScanData.MetaData.ScanFieldDeltaX; // quadratic pixels for single profile lines
                 else
                     bcr.YScale = nmmScanData.MetaData.ScanFieldDeltaY;
-                if (options.LineOnly) 
+                if (options.LineOnly)
                     bcr.YScale = 0; // but force 1D line if requested
-                ConsoleUI.WriteLine($"Extract single profile {options.ProfileIndex} only");
             }
             bcr.XScale = nmmScanData.MetaData.ScanFieldDeltaX;
             bcr.ZScale = options.ZScale;
