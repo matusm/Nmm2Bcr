@@ -196,9 +196,9 @@ namespace Nmm2Bcr
             bcrMetaData.Add("TemperatureRange", $"{nmmScanData.MetaData.AirTemperatureDrift:F3} oC");
             bcrMetaData.Add("ScanSpeed", $"{nmmScanData.MetaData.ScanSpeed * 1e6} um/s");
             bcrMetaData.Add("AngularOrientation", $"{nmmScanData.MetaData.ScanFieldRotation:F3} grad");
-            bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F3} mm");
-            bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY * 1000:F3} mm");
-            bcrMetaData.Add("ScanFieldCenterZ", $"{nmmScanData.MetaData.ScanFieldCenterZ * 1000:F3} mm");
+            bcrMetaData.Add("ScanFieldCenterX", $"{nmmScanData.MetaData.ScanFieldCenterX} m");
+            bcrMetaData.Add("ScanFieldCenterY", $"{nmmScanData.MetaData.ScanFieldCenterY} m");
+            bcrMetaData.Add("ScanFieldCenterZ", $"{nmmScanData.MetaData.ScanFieldCenterZ} m");
             bcrMetaData.Add("ScanFieldOriginX", $"{nmmScanData.MetaData.ScanFieldOriginX} m");
             bcrMetaData.Add("ScanFieldOriginY", $"{nmmScanData.MetaData.ScanFieldOriginY} m");
             bcrMetaData.Add("ScanFieldOriginZ", $"{nmmScanData.MetaData.ScanFieldOriginZ} m");
