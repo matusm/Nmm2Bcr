@@ -218,7 +218,7 @@ namespace Nmm2Bcr
             bcr.PrepareTrailerSection(bcrMetaData);
 
             // now generate output
-            string outFileName = GetOutputFilename(nmmFileName);
+            string outFileName = GetOutputFilename(nmmFileName, topographyProcessType);
             ConsoleUI.WritingFile(outFileName);
             if (!bcr.WriteToFile(outFileName))
             {
@@ -228,23 +228,43 @@ namespace Nmm2Bcr
             ConsoleUI.Done();
         }
 
-        static string GetOutputFilename(NmmFileName nfm)
+        static string GetOutputFilename(NmmFileName nfm, TopographyProcessType topo)
         {
             string outFileName;
+            string channelSuffix = string.Empty;
+            string traceSuffix = string.Empty;
             if (string.IsNullOrWhiteSpace(options.OutputPath))
             {
                 outFileName = nfm.GetFreeFileNameWithIndex("sdf");
+                switch (topo)
+                {
+                    case TopographyProcessType.None:
+                        break;
+                    case TopographyProcessType.ForwardOnly:
+                        traceSuffix = "_f";
+                        break;
+                    case TopographyProcessType.BackwardOnly:
+                        traceSuffix = "_b";
+                        break;
+                    case TopographyProcessType.Average:
+                        traceSuffix = "_a";
+                        break;
+                    case TopographyProcessType.Difference:
+                        traceSuffix = "_d";
+                        break;
+                    default:
+                        break;
+                }
                 if(!string.Equals(options.ChannelSymbol, "-LZ+AZ", StringComparison.OrdinalIgnoreCase))
                 {
-                    string suffix = $"_{options.ChannelSymbol.ToUpper()}";
-                    outFileName = $"{Path.GetFileNameWithoutExtension(outFileName)}{suffix}{Path.GetExtension(outFileName)}";
+                    channelSuffix = $"_{options.ChannelSymbol.ToUpper()}";
                 }
+                outFileName = $"{Path.GetFileNameWithoutExtension(outFileName)}{traceSuffix}{channelSuffix}{Path.GetExtension(outFileName)}";
             }
             else
             {
                 outFileName = options.OutputPath;
             }
-
             return outFileName;
         }
 
