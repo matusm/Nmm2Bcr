@@ -236,28 +236,31 @@ namespace Nmm2Bcr
             if (string.IsNullOrWhiteSpace(options.OutputPath))
             {
                 outFileName = nfm.GetFreeFileNameWithIndex("sdf");
-                switch (topo)
+                if (options.AddPostfix)
                 {
-                    case TopographyProcessType.None:
-                        break;
-                    case TopographyProcessType.ForwardOnly:
-                        traceSuffix = "_f";
-                        break;
-                    case TopographyProcessType.BackwardOnly:
-                        traceSuffix = "_b";
-                        break;
-                    case TopographyProcessType.Average:
-                        traceSuffix = "_a";
-                        break;
-                    case TopographyProcessType.Difference:
-                        traceSuffix = "_d";
-                        break;
-                    default:
-                        break;
-                }
-                if(!string.Equals(options.ChannelSymbol, "-LZ+AZ", StringComparison.OrdinalIgnoreCase))
-                {
-                    channelSuffix = $"_{options.ChannelSymbol.ToUpper()}";
+                    switch (topo)
+                    {
+                        case TopographyProcessType.None:
+                            break;
+                        case TopographyProcessType.ForwardOnly:
+                            traceSuffix = "_f";
+                            break;
+                        case TopographyProcessType.BackwardOnly:
+                            traceSuffix = "_b";
+                            break;
+                        case TopographyProcessType.Average:
+                            traceSuffix = "_a";
+                            break;
+                        case TopographyProcessType.Difference:
+                            traceSuffix = "_d";
+                            break;
+                        default:
+                            break;
+                    }
+                    if (!string.Equals(options.ChannelSymbol, "-LZ+AZ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        channelSuffix = $"_{options.ChannelSymbol.ToUpper()}";
+                    }
                 }
                 outFileName = $"{Path.GetFileNameWithoutExtension(outFileName)}{traceSuffix}{channelSuffix}{Path.GetExtension(outFileName)}";
             }

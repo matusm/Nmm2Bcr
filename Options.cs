@@ -4,6 +4,9 @@ namespace Nmm2Bcr
 {
     class Options
     {
+        [Option("comment", Default = "---", HelpText = "User supplied comment string.")]
+        public string UserComment { get; set; }
+
         [Option('c', "channel", Default = "-LZ+AZ", HelpText = "Channel to export.")]
         public string ChannelSymbol { get; set; }
 
@@ -22,15 +25,6 @@ namespace Nmm2Bcr
         [Option('q', "quiet", HelpText = "Quiet mode. No screen output (except for errors).")]
         public bool BeQuiet { get; set; }
 
-        [Option("comment", Default = "---", HelpText = "User supplied comment string.")]
-        public string UserComment { get; set; }
-
-        [Option("iso", HelpText = "Output file ISO 25178-71:2012 compliant.")]
-        public bool IsoFormat { get; set; }
-
-        [Option("heydemann", HelpText = "Perform Heydemann correction.")]
-        public bool DoHeydemann { get; set; }
-
         [Option("back", HelpText = "Use backtrace profile (when present).")]
         public bool UseBack { get; set; }
 
@@ -43,16 +37,27 @@ namespace Nmm2Bcr
         [Option("strict", HelpText = "Force standardized format.")]
         public bool Strict { get; set; }
 
+        [Option("iso", HelpText = "Output file ISO 25178-71:2012 compliant.")]
+        public bool IsoFormat { get; set; }
+
+        [Option("heydemann", HelpText = "Perform Heydemann correction.")]
+        public bool DoHeydemann { get; set; }
+
         [Option('p', "profile", Default = 0, HelpText = "Extract single profile.")]
         public int ProfileIndex { get; set; }
 
         [Option("1Dprofile", HelpText = "Force single profiles to be of width 0.")]
         public bool LineOnly { get; set; }
 
-        [Value(0, MetaName = "InputPath", Required = true, HelpText = "Input file-name including path")]
+        [Option("noPostfix", HelpText = "Suppress postfixes on the result filename.")]
+        public bool SuppressPostfix { get; set; }
+
+        public bool AddPostfix => !SuppressPostfix;
+
+        [Value(0, MetaName = "InputPath", Required = true, HelpText = "Input filename including path")]
         public string InputPath { get; set; }
 
-        [Value(1, MetaName = "OutputPath", HelpText = "Output file-name including path")]
+        [Value(1, MetaName = "OutputPath", HelpText = "Result filename including path")]
         public string OutputPath { get; set; }
 
     }
