@@ -78,9 +78,16 @@ Nmm2Bcr inputfile [outputfile] [options]
 
 * Invalid data points are coded by the string `BAD` instead of `NaN`.
 
-## Dependencies  
-Bev.IO.NmmReader:  https://github.com/matusm/Bev.IO.NmmReader  
+## Installation
+If you do not want to build the application from the source code you can use the released binaries. Just copy the .exe and the .dll files to a directory of your choice. This direcory should be included in the user's PATH variable.
 
-Bev.IO.BcrWriter: https://github.com/matusm/Bev.IO.BcrWriter 
+## Dependencies and Acknowledgments
+* [At.Matus.IO.NmmReader](https://github.com/matusm/At.Matus.IO.NmmReader)  
+* [At.Matus.IO.BcrWriter](https://github.com/matusm/At.Matus.IO.BcrWriter)  
+* [At.Matus.StatisticPod](https://github.com/matusm/At.Matus.StatisticPod)
+* [CommandLineParser](https://github.com/commandlineparser/commandline)
+* [Math.NET numerics](https://numerics.mathdotnet.com)
 
-CommandLineParser: https://github.com/commandlineparser/commandline 
+---
+
+**Note**: This library is not officially affiliated with or endorsed by SIOS Meßtechnik GmbH.
